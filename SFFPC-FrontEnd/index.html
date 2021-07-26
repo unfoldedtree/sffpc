@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pagination.js.org/dist/2.1.5/pagination.css"/>
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://pagination.js.org/dist/2.1.5/pagination.min.js"></script>
+    <script src="main.js"></script>
+    <title>SFF PC Database</title>
+</head>
+<body>
+    <div class="container-fluid">
+      <header role="banner" class="text-center">
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4">SFF CASES</h1>
+            <p class="lead">Browse the database of PC cases provided by r/sffpc.</p>
+          </div>
+        </div>
+      </header>
+<!-- Begin Filter Modal --> 
+<div class="modal fade" id="filterModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filter Options</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">CPU </span>
+          <input type="text" id="filterCpu" class="form-control" placeholder="Min Cooler Height" aria-label="coolerHeight" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">GPU</span>
+          <input type="text" id="filterGpu" class="form-control" placeholder="Min GPU Length" aria-label="lengthGPU" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Volume </span>
+          <input type="text" id="filterVolume" class="form-control" placeholder="Max Volume" aria-label="maxVolume" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+          <label class="input-group-text">Volume</label>
+          <input type="radio" class="btn-check" name="flexRadioSort" id="flexRadioAscending" autocomplete="off" checked>
+          <label class="btn btn-outline-secondary" for="flexRadioAscending">Ascending</label>
+          <input type="radio" class="btn-check" name="flexRadioSort" id="flexRadioDescending" autocomplete="off">
+          <label class="btn btn-outline-secondary" for="flexRadioDescending">Descending</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="filterSubmit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- End Filter Modal -->    
+<!-- Case Modal -->
+<div class="modal fade" id="caseModal" tabindex="-1" aria-labelledby="caseModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="caseModalLabel">Case Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <p>Manufacturer: <span id="manufacturer"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Model: <span id="model"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Style: <span id="style"></span></p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <h4 class="text-center">Case Dimensions</h4>
+            <div class="col-12">
+              <p>Volume (liters): <span id="volume"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Length (mm): <span id="caseLength"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Width (mm): <span id="caseWidth"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Height (mm): <span id="caseHeight"></span></p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <h4 class="text-center">Expansion Cards</h4>
+            <div class="col-12">
+              <p>Length (mm): <span id="gpuLength"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Width (mm): <span id="gpuWidth"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Height (mm): <span id="gpuHeight"></span></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p>PCIE Slots: <span id="pcieSlots"></span></p>
+            </div>
+            <div class="col-12">
+              <p>LP PCIE Slots: <span id="lpSlots"></span></p>
+            </div>
+            <div class="col-12">
+              <p>PCIE Riser: <span id="pcieRiser"></span></p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <h4 class="text-center">Compatibility</h4>
+            <div class="col-12">
+              <p>Cooler Height (mm): <span id="coolerHeight"></span></p>
+            </div>
+            <div class="col-12">
+              <p>AIO Compatibility (mm): <span id="aio"></span></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p>Motherboard: <span id="motherboard"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Power Supply: <span id="psu"></span></p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <h4 class="text-center">Drives</h4>
+            <div class="col-12">
+              <p>2.5 Inch Drive: <span id="ssd"></span></p>
+            </div>
+            <div class="col-12">
+              <p>3.5 Inch Drive: <span id="hdd"></span></p>
+            </div>
+            <div class="col-12">
+              <p>5.25 Inch Drive: <span id="dvd"></span></p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <h4 class="text-center">Front Panel</h4>
+            <div class="col-12">
+              <p>USB 2.0: <span id="usb2"></span></p>
+            </div>
+            <div class="col-12">
+              <p>USB 3.0: <span id="usb3"></span></p>
+            </div>
+            <div class="col-12">
+              <p>USB C: <span id="usbc"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Audio Jacks: <span id="fpAudio"></span></p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <h4 class="text-center">Pricing</h4>
+            <div class="col-12">
+              <p>Price (CNY): <span id="cny"></span></p>
+            </div>
+            <div class="col-12">
+              <p>Price (USD): <span id="usd"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Form -->
+<hr />
+    <form id="caseForm">
+        <div class="mb-3">
+          <label for="inputVendor" class="form-label">Manufacturer</label>
+          <input type="text" class="form-control" id="inputVendor" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="inputModel" class="form-label">Model</label>
+            <input type="text" class="form-control" id="inputModel" aria-describedby="emailHelp">
+          </div>
+        <button type="button" class="btn btn-outline-danger" id="clearInputs">Clear</button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal" id="filterCase">Filter</button>
+        <button type="submit" class="btn btn-primary" id="submitCase">Submit</button>
+      </form>
+      <hr />
+<!-- Cases -->
+      <div id="renderCases" class="mb-3">
+        <div class="wrapper"></div>
+      </div>
+      <ul id="pagin">
+         
+      </ul>
+</body>
+</html>
